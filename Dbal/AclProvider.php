@@ -104,7 +104,7 @@ class AclProvider implements AclProviderInterface
             $aclFound = false;
 
             // check if result already contains an ACL
-            if ($result->contains($oid)) {
+            if ($result->offsetExists($oid)) {
                 $aclFound = true;
             }
 
@@ -197,7 +197,7 @@ class AclProvider implements AclProviderInterface
 
         // check that we got ACLs for all the identities
         foreach ($oids as $oid) {
-            if (!$result->contains($oid)) {
+            if (!$result->offsetExists($oid)) {
                 if (1 === \count($oids)) {
                     $objectName = method_exists($oid, '__toString') ? $oid : \get_class($oid);
                     throw new AclNotFoundException(sprintf('No ACL found for %s.', $objectName));
