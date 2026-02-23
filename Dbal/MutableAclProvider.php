@@ -134,14 +134,14 @@ class MutableAclProvider extends AclProvider implements MutableAclProviderInterf
 
             if (false === $this->propertyChanges->offsetExists($acl) && $acl instanceof MutableAclInterface) {
                 $acl->addPropertyChangedListener($this);
-                $this->propertyChanges->attach($acl, []);
+                $this->propertyChanges->offsetSet($acl, []);
             }
 
             $parentAcl = $acl->getParentAcl();
             while (null !== $parentAcl) {
                 if (false === $this->propertyChanges->offsetExists($parentAcl) && $acl instanceof MutableAclInterface) {
                     $parentAcl->addPropertyChangedListener($this);
-                    $this->propertyChanges->attach($parentAcl, []);
+                    $this->propertyChanges->offsetSet($parentAcl, []);
                 }
 
                 $parentAcl = $parentAcl->getParentAcl();
@@ -311,9 +311,7 @@ class MutableAclProvider extends AclProvider implements MutableAclProviderInterf
             // ACL instances for object identities of the same type that are already in-memory
             if (\count($sharedPropertyChanges) > 0) {
                 $classAcesProperty = new \ReflectionProperty(Acl::class, 'classAces');
-                $classAcesProperty->setAccessible(true);
                 $classFieldAcesProperty = new \ReflectionProperty(Acl::class, 'classFieldAces');
-                $classFieldAcesProperty->setAccessible(true);
 
                 foreach ($this->loadedAcls[$acl->getObjectIdentity()->getType()] as $sameTypeAcl) {
                     if (isset($sharedPropertyChanges['classAces'])) {
@@ -863,7 +861,6 @@ QUERY;
                     $this->loadedAces[$aceId] = $ace;
 
                     $aceIdProperty = new \ReflectionProperty(Entry::class, 'id');
-                    $aceIdProperty->setAccessible(true);
                     $aceIdProperty->setValue($ace, (int) $aceId);
                 }
             }
@@ -935,7 +932,6 @@ QUERY;
                 $this->loadedAces[$aceId] = $ace;
 
                 $aceIdProperty = new \ReflectionProperty($ace, 'id');
-                $aceIdProperty->setAccessible(true);
                 $aceIdProperty->setValue($ace, (int) $aceId);
             }
         }
