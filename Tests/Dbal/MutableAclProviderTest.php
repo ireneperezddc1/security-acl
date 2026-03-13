@@ -263,7 +263,7 @@ class MutableAclProviderTest extends TestCase
         ;
         $con
             ->expects($this->never())
-            ->method('executeUpdate')
+            ->method('executeStatement')
         ;
 
         $provider = new MutableAclProvider($con, new PermissionGrantingStrategy(), []);
