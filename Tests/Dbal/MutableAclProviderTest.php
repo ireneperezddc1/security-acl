@@ -538,6 +538,7 @@ class MutableAclProviderTest extends TestCase
             ],
             $configuration
         );
+        $this->connection->setNestTransactionsWithSavepoints(true);
 
         // import the schema
         $schema = new Schema($this->getOptions());

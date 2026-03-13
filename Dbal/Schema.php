@@ -68,10 +68,8 @@ final class Schema extends BaseSchema
         $table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
         $table->addColumn('class_type', 'string', ['length' => 200]);
 
-        /*
-         * DBAL 4+ uses addPrimaryKeyConstraint() with PrimaryKeyConstraint objects,
-         * while DBAL 3 uses setPrimaryKey() with column name arrays.
-         * Fully qualified class names are used to avoid importing DBAL 4-only classes.
+        /**
+         * @psalm-suppress RedundantCondition Since we are compatibles with DBAL 3 and 4, we need to check if the method exists
          */
         if (method_exists($table, 'addPrimaryKeyConstraint')) {
             $table->addPrimaryKeyConstraint(
@@ -106,10 +104,8 @@ final class Schema extends BaseSchema
         $table->addColumn('audit_success', 'boolean');
         $table->addColumn('audit_failure', 'boolean');
 
-        /*
-         * DBAL 4+ uses addPrimaryKeyConstraint() with PrimaryKeyConstraint objects,
-         * while DBAL 3 uses setPrimaryKey() with column name arrays.
-         * Fully qualified class names are used to avoid importing DBAL 4-only classes.
+        /**
+         * @psalm-suppress RedundantCondition Since we are compatibles with DBAL 3 and 4, we need to check if the method exists
          */
         if (method_exists($table, 'addPrimaryKeyConstraint')) {
             $table->addPrimaryKeyConstraint(
@@ -135,7 +131,8 @@ final class Schema extends BaseSchema
      */
     protected function addObjectIdentitiesTable()
     {
-        $table = $this->createTable($this->options['oid_table_name']);
+        $tableName = $this->options['oid_table_name'];
+        $table = $this->createTable($tableName);
 
         $table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
         $table->addColumn('class_id', 'integer', ['unsigned' => true]);
@@ -143,10 +140,8 @@ final class Schema extends BaseSchema
         $table->addColumn('parent_object_identity_id', 'integer', ['unsigned' => true, 'notnull' => false]);
         $table->addColumn('entries_inheriting', 'boolean');
 
-        /*
-         * DBAL 4+ uses addPrimaryKeyConstraint() with PrimaryKeyConstraint objects,
-         * while DBAL 3 uses setPrimaryKey() with column name arrays.
-         * Fully qualified class names are used to avoid importing DBAL 4-only classes.
+        /**
+         * @psalm-suppress RedundantCondition Since we are compatibles with DBAL 3 and 4, we need to check if the method exists
          */
         if (method_exists($table, 'addPrimaryKeyConstraint')) {
             $table->addPrimaryKeyConstraint(
@@ -162,12 +157,6 @@ final class Schema extends BaseSchema
         $table->addUniqueIndex(['object_identifier', 'class_id']);
         $table->addIndex(['parent_object_identity_id']);
 
-        if (method_exists($table, 'getObjectName')) {
-            $tableName = $table->getObjectName()->toString();
-        } else {
-            $tableName = $table->getName();
-        }
-
         $table->addForeignKeyConstraint($tableName, ['parent_object_identity_id'], ['id']);
     }
 
@@ -181,10 +170,8 @@ final class Schema extends BaseSchema
         $table->addColumn('object_identity_id', 'integer', ['unsigned' => true]);
         $table->addColumn('ancestor_id', 'integer', ['unsigned' => true]);
 
-        /*
-         * DBAL 4+ uses addPrimaryKeyConstraint() with PrimaryKeyConstraint objects,
-         * while DBAL 3 uses setPrimaryKey() with column name arrays.
-         * Fully qualified class names are used to avoid importing DBAL 4-only classes.
+        /**
+         * @psalm-suppress RedundantCondition Since we are compatibles with DBAL 3 and 4, we need to check if the method exists
          */
         if (method_exists($table, 'addPrimaryKeyConstraint')) {
             $table->addPrimaryKeyConstraint(
@@ -199,18 +186,13 @@ final class Schema extends BaseSchema
             $table->setPrimaryKey(['object_identity_id', 'ancestor_id']);
         }
 
-        $oidTable = $this->getTable($this->options['oid_table_name']);
+        $oidTableName = $this->options['oid_table_name'];
         $action = 'CASCADE';
         if ($this->platform instanceof SQLServerPlatform) {
             // MS SQL Server does not support recursive cascading
             $action = 'NO ACTION';
         }
 
-        if (method_exists($oidTable, 'getObjectName')) {
-            $oidTableName = $oidTable->getObjectName()->toString();
-        } else {
-            $oidTableName = $oidTable->getName();
-        }
         $table->addForeignKeyConstraint($oidTableName, ['object_identity_id'], ['id'], ['onDelete' => $action, 'onUpdate' => $action]);
         $table->addForeignKeyConstraint($oidTableName, ['ancestor_id'], ['id'], ['onDelete' => $action, 'onUpdate' => $action]);
     }
@@ -226,10 +208,8 @@ final class Schema extends BaseSchema
         $table->addColumn('identifier', 'string', ['length' => 200]);
         $table->addColumn('username', 'boolean');
 
-        /*
-         * DBAL 4+ uses addPrimaryKeyConstraint() with PrimaryKeyConstraint objects,
-         * while DBAL 3 uses setPrimaryKey() with column name arrays.
-         * Fully qualified class names are used to avoid importing DBAL 4-only classes.
+        /**
+         * @psalm-suppress RedundantCondition Since we are compatibles with DBAL 3 and 4, we need to check if the method exists
          */
         if (method_exists($table, 'addPrimaryKeyConstraint')) {
             $table->addPrimaryKeyConstraint(
